@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zimba Mission Hospital Newsletter - The Healing Hands</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- html2pdf with specific version for stability -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #eef2f5;
+            padding: 2rem;
+        }
+
+        /* PDF Container - Clean White Background */
+        .pdf-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        /* Newsletter Content - Perfect for Print/PDF */
+        .newsletter {
+            background: white;
+            font-family: 'Inter', sans-serif;
+            color: #1e2f3e;
+            line-height: 1.6;
+        }
+
+        /* Header Section with Branding and Logo */
+        .newsletter-header {
+            background: linear-gradient(135deg, #0B3B2F 0%, #1B5E4A 100%);
+            padding: 2.5rem 2rem 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #D4AF37, #F5D742, #D4AF37);
+        }
+
+        /* Logo Container - Perfectly Aligned */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hospital-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .hospital-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .hospital-name {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        .newsletter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 0.5rem 0 0.5rem;
+        }
+
+        .newsletter-title span {
+            color: #F5D742;
+            border-bottom: 3px solid #F5D742;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .edition-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .edition-badge i {
+            margin-right: 6px;
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            padding: 2.5rem;
+        }
+
+        /* Foreword Section - Elegant Design */
+        .foreword-section {
+            background: linear-gradient(135deg, #FEFCF7 0%, #FFF9EF 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #EAE3D5;
+            position: relative;
+        }
+
+        .foreword-quote {
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: #D4AF37;
+            color: #0B3B2F;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .foreword-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .administrator-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #D4AF37;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .foreword-title h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0B3B2F;
+            margin-bottom: 0.25rem;
+        }
+
+        .foreword-title p {
+            font-size: 0.8rem;
+            color: #B8860B;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .foreword-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #2c3e4e;
+            margin-bottom: 1rem;
+        }
+
+        .foreword-signature {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #E8E2D4;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #1B5E4A;
+        }
+
+        .foreword-signature p {
+            margin-bottom: 0.25rem;
+        }
+
+        .foreword-signature .signature-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            font-style: normal;
+        }
+
+        /* Feature Article */
+        .feature-article {
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #E8E2D4;
+            padding-bottom: 2rem;
+        }
+
+        .feature-image {
+            width: 100%;
+            height: auto;
+            max-height: 380px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .article-meta {
+            color: #B8860B;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-article h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0B3B2F;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .feature-article p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #2c3e4e;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box {
+            background: #F9F5E8;
+            border-left: 4px solid #D4AF37;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* Two Column Layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .story-card {
+            background: #FEFCF7;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #EAE3D5;
+        }
+
+        .story-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .story-content {
+            padding: 1.2rem;
+        }
+
+        .story-tag {
+            color: #D4AF37;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1B5E4A;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-content p {
+            font-size: 0.9rem;
+            color: #4a5b6e;
+            line-height: 1.5;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #F9F5E8 0%, #FFF9EF 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .stat-item h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #D4AF37;
+        }
+
+        .stat-item p {
+            font-size: 0.85rem;
+            color: #0B3B2F;
+            font-weight: 600;
+        }
+
+        /* Quote */
+        .quote-block {
+            background: #0B3B2F;
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .quote-block i {
+            font-size: 2rem;
+            color: #D4AF37;
+            margin-bottom: 1rem;
+        }
+
+        .quote-block p {
+            font-size: 1.2rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .quote-author {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .event-card {
+            background: white;
+            border: 1px solid #EAE3D5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .event-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .event-content {
+            padding: 1rem;
+        }
+
+        .event-date {
+            display: inline-block;
+            background: #0B3B2F;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-content h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1B5E4A;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Footer */
+        .newsletter-footer {
+            background: #1e2f3e;
+            color: #E8E2D4;
+            padding: 2rem;
+            text-align: center;
+            border-top: 4px solid #D4AF37;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo i {
+            color: #D4AF37;
+            margin-right: 8px;
+        }
+
+        .footer-contact {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .copyright {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 1rem;
+        }
+
+        /* Control Buttons */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .btn-pdf, .btn-print {
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .btn-pdf {
+            background: #D4AF37;
+            color: #0B3B2F;
+        }
+
+        .btn-pdf:hover {
+            background: #c49a1e;
+            transform: translateY(-2px);
+        }
+
+        .btn-print {
+            background: #2c3e4e;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #1e2f3e;
+            transform: translateY(-2px);
+        }
+
+        .btn-pdf:disabled, .btn-print:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .two-columns, .stats-section, .events-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-wrapper {
+                padding: 1.5rem;
+            }
+            .newsletter-title {
+                font-size: 2rem;
+            }
+            .foreword-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .feature-article h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Print/PDF Optimizations */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .controls {
+                display: none;
+            }
+            .pdf-container {
+                box-shadow: none;
+                margin: 0;
+            }
+            .newsletter {
+                margin: 0;
+            }
+            .feature-image, .story-img, .event-img, .administrator-photo {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .foreword-section {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Newsletter Container -->
+    <div class="pdf-container">
+        <div class="newsletter" id="newsletterContent">
+            <!-- HEADER -->
+            <div class="newsletter-header">
+                <div class="header-decoration"></div>
+                
+                <div class="logo-container">
+                    <div class="hospital-logo">
+                        <img class="hospital-logo-img" src="pwc.png" alt="Zimba Mission Hospital Logo">
+                    </div>
+                    <div class="hospital-name">
+                        ZIMBA MISSION HOSPITAL • EST. 1959
+                    </div>
+                </div>
+                
+                <h1 class="newsletter-title">
+                    The Healing <span>Hands</span>
+                </h1>
+                <div class="subtitle">A chronicle of compassionate care & community transformation</div>
+                <div class="edition-badge">
+                    <i class="far fa-calendar-alt"></i> NEWSLETTER VOLUME I • MARCH 2026
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="content-wrapper">
+                <!-- FOREWORD -->
+                <div class="foreword-section">
+                    <div class="foreword-quote">
+                        <i class="fas fa-feather-alt"></i>
+                    </div>
+                    <div class="foreword-header">
+                        <img class="administrator-photo" src="WhatsApp Image 2026-03-19 at 16.35.46.jpeg" alt="Mrs. Prisca Siachitema">
+                        <div class="foreword-title">
+                            <h3>A Word from Our Administrator</h3>
+                            <p><i class="fas fa-calendar-alt"></i> March 2026</p>
+                        </div>
+                    </div>
+                    <div class="foreword-text">
+                        <p>Dear Friends, Partners, and Community Members,</p>
+                        <p style="margin-top: 0.8rem;">It is with a heart full of gratitude that I welcome you to the March 2026 edition of <strong>The Healing Hands</strong>. As I reflect on the past quarter, I am reminded of the incredible journey we have walked together—a journey marked by resilience, compassion, and unwavering dedication to the health and well-being of our community.</p>
+                        <p style="margin-top: 0.8rem;">This year has already brought remarkable milestones. Our mobile clinic initiative reached over 1,200 patients in remote villages, bringing essential healthcare to those who need it most. The inauguration of our expanded Pediatric Wing represents a dream realized—a sanctuary where children can heal with dignity and hope. And behind every statistic, there is a story: a mother who safely delivered twins, a father who walks again after years, a child whose laughter now fills a home once shadowed by illness.</p>
+                        <p style="margin-top: 0.8rem;">None of this would be possible without the dedication of our extraordinary staff, the generosity of our partners, and the trust of the families we serve. You are the hands and feet of this mission, and I am deeply honored to stand alongside you.</p>
+                        <p style="margin-top: 0.8rem;">As we look ahead, we remain committed to expanding access, improving quality, and deepening our roots in this community we call home. Together, we are not just treating diseases—we are restoring hope, building futures, and bearing witness to the transformative power of compassionate care.</p>
+                    </div>
+                    <div class="foreword-signature">
+                        <p>With profound gratitude and prayers,</p>
+                        <p class="signature-name">Mrs. Prisca Siachitema</p>
+                        <p>Hospital Administrator</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;"><i class="fas fa-quote-left"></i> "Healing is an act of love—given freely, received with hope."</p>
+                    </div>
+                </div>
+
+                <!-- FEATURE ARTICLE -->
+                <div class="feature-article">
+                    <img class="feature-image" src="zambia-1-12539.jpg" alt="Zimba Mission Hospital OPD">
+                    <div class="article-meta">
+                        <i class="fas fa-newspaper"></i> COVER STORY
+                    </div>
+                    <h1>Bringing Healthcare Closer: Strengthening Outreach Services in Our Catchment Area</h1>
+                    <p>Zimba Mission Hospital continues to extend essential healthcare services beyond the hospital through routine outreach activities conducted in surrounding communities. These outreach visits are designed to improve access to care for populations that face challenges reaching the facility, particularly mothers, children, and patients requiring ongoing follow-up.</p>
+                    <p>During the recent outreach activities, health teams consisting of nurses, clinical officers, and community health assistants provided integrated services including antenatal care, under-five clinics, immunization, health education, and screening for common conditions such as hypertension and malaria. These services are often delivered in collaboration with community health workers and local leadership to ensure effective mobilization and continuity of care.</p>
+                    <p>“Outreach services are a vital part of our work because they allow us to reach people early and provide preventive care,” noted a member of the clinical team. “We are able to identify health concerns, support mothers during pregnancy, and ensure children receive essential immunizations.”</p>
+                    
+					<div class="highlight-box">
+                        <p><strong><i class="fas fa-chart-line"></i> OUTREACH SUMMARY:</strong> 500+ clients attended • 180 children immunized • 80 antenatal visits provided • 60 patients screened for hypertension and other conditions • Multiple outreach sites covered</p>
+                    </div>
+                    <p><strong>Inside this issue:</strong> New Pediatric Wing Inauguration • Nutrition Impact Study • Q&A with Dr. Andrew Musoni • Volunteer Surgeon Reflections • Upcoming Community Events</p>
+                </div>
+
+                <!-- STORIES GRID -->
+                <div class="two-columns">
+                    <div class="story-card">
+                        <img class="story-img" src="maternal.png" alt="Maternal Health">
+                        <div class="story-content">
+                            <div class="story-tag"><i class="fas fa-baby-carriage"></i> MATERNAL HEALTH</div>
+                            <h3>Safe Births Initiative: 34% Reduction in Maternal Mortality</h3>
+                            <p>Zimba Mission Hospital continues to improve maternal health through skilled birth attendance and midwife training, achieving a 34% reduction in maternal mortality in our catchment area. Challenges such as long distances and late antenatal bookings remain, but success stories like Grace, a mother of twins who delivered safely, show the impact of quality, compassionate care.</p>
+                        </div>
+                    </div>
+                    <div class="story-card">
+                        <img class="story-img" src="macroburn.jpeg" alt="Nutrition Program">
+                        <div class="story-content">
+                            <div class="story-tag"><i class="fas fa-apple-alt"></i> HOSPITAL SAFETY & INFRASTRUCTURE</div>
+                            <h3>New Macroburn Installed</h3>
+                            <p>Zimba Mission Hospital continues to advance patient safety and quality care. We are proud to announce the successful installation of a Macroburn medical incinerator, a modern system for safe and efficient disposal of hazardous healthcare waste. Operating at temperatures of 800–1200°C, it ensures complete destruction of infectious materials such as used syringes, contaminated dressings, and other clinical waste.
+
+This installation strengthens infection prevention and control, reduces risk of disease transmission, and supports compliance with environmental and public health standards. It also promotes cleaner, more sustainable healthcare practices across our facility.
+
+We thank our dedicated staff, partners, and supporters who make milestones like this possible — together, we are building a safer, healthier future for Zimba and our community.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="two-columns">
+                    <div class="story-card">
+                        <img class="story-img" src="2-keyhole-surgery-jim-varneyscience-photo-library.jpg" alt="Surgical Mission">
+                        <div class="story-content">
+                            <div class="story-tag"><i class="fas fa-hand-holding-heart"></i> SURGICAL MISSION</div>
+                            <h3>48 Lives Transformed by Our Surgical Team</h3>
+                            <p>Zimba Mission Hospital’s skilled surgeons performed 48 life-changing surgeries, including orthopedic and general procedures. Patients like John, a father of four, are now walking again after years of immobility — a testament to the dedication and expertise of our local surgical team.</p>
+                        </div>
+                    </div>
+                    <div class="story-card">
+                        <img class="story-img" src="istockphoto-1217388758-170667a.jpg" alt="Clean Water">
+                        <div class="story-content">
+                            <div class="story-tag"><i class="fas fa-leaf"></i> PATIENT SPOTLIGHT</div>
+                            <h3>Caring for Our Most Vulnerable: Meet Samuel</h3>
+                            <p>Samuel, a young patient in our care, is oxygen-dependent due to a chronic respiratory condition. Despite his daily health challenges, the dedicated staff at Zimba Mission Hospital provide round-the-clock support, ensuring he receives oxygen therapy, monitoring, and compassionate care.</p>
+							<p>His journey highlights the importance of specialized care, patient-centered support, and the tireless commitment of our medical team in improving quality of life for those with chronic conditions. Samuel’s resilience, combined with the hospital’s care, inspires hope for families facing similar health challenges in our community.</p>
+                        
+						</div>
+                    </div>
+                </div>
+
+                <!-- STATS SECTION -->
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <h2>1,200+</h2>
+                        <p>Patients Served</p>
+                    </div>
+                    <div class="stat-item">
+                        <h2>34%</h2>
+                        <p>Reduction in Maternal Mortality</p>
+                    </div>
+                    <div class="stat-item">
+                        <h2>12</h2>
+                        <p>Villages Reached</p>
+                    </div>
+                </div>
+
+                <!-- QUOTE BLOCK -->
+                <div class="quote-block">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"We are called to deliver world-class compassionate care in rural Zambia. Every life we touch, every family we serve — this is the heart of our mission."</p>
+                    <div class="quote-author">— Dr. Andrew Musoni, Chief Medical Officer</div>
+                </div>
+
+                <!-- EVENTS SECTION -->
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #0B3B2F; margin: 2rem 0 1rem; text-align: center;">Upcoming Events & Outreach</h2>
+                <div class="events-grid">
+                    <div class="event-card">
+                        <img class="event-img" src="child-nursing.x916b8fbc.jpg" alt="Health Fair">
+                        <div class="event-content">
+                            <div class="event-date"><i class="far fa-calendar-check"></i> April 12, 2026</div>
+                            <h4>Maternal & Child Health Fair</h4>
+                            <p>Free prenatal consultations, vaccination drive, nutrition workshops. Zimba Hospital grounds.</p>
+                        </div>
+                    </div>
+                    <div class="event-card">
+                        <img class="event-img" src="b0e8d8a6-a7e5-4752-9b35-6912e015eadb.jpeg" alt="Mobile Clinic">
+                        <div class="event-content">
+                            <div class="event-date"><i class="fas fa-truck-medical"></i> April 25, 2026</div>
+                            <h4>Dental Outreach</h4>
+                            <p>Our dental team will provide free oral health screenings, basic dental care, and hygiene education for market vendors and community members.</p>
+                        </div>
+                    </div>
+                    <div class="event-card">
+                        <img class="event-img" src="Picture-1-e1679490814219-770x500.jpg" alt="Volunteer Day">
+                        <div class="event-content">
+                            <div class="event-date"><i class="fas fa-hands-helping"></i> May 10, 2026</div>
+                            <h4>Volunteer & Partnership Day</h4>
+                            <p>Orientation for medical and non-medical volunteers. Learn about Zimba Mission Hospital’s strategic plan, mission, and ways to contribute to sustainable healthcare.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECOND FEATURE -->
+                <div class="feature-article" style="margin-top: 2rem;">
+                    <img class="feature-image" src="zambia-hospital-12542.jpg" alt="Pediatric Wing">
+                    <div class="article-meta">
+                        <i class="fas fa-child"></i> HOSPITAL INFRASTRUCTURE UPDATE
+                    </div>
+                    <h1>Addressing Facility Challenges to Improve Patient Care</h1>
+                    <p>Zimba Mission Hospital continues to provide essential health services to the community despite ongoing infrastructure challenges. Our outpatient department (OPD) building, which serves hundreds of patients daily, is currently experiencing roof leaks during the rainy season. This affects the comfort and safety of patients and presents challenges for staff in delivering consistent care.</p>
+                    <p>In addition, frequent load shedding from ZESCO disrupts critical operations, including laboratory work and refrigeration of essential medicines and vaccines. To address this sustainably, the hospital is exploring the installation of solar power systems, which would ensure reliable electricity without the high cost of fuel.</p>
+                    <p>We are actively seeking support from partners, donors, and well-wishers to help fund these solar installations and critical repairs. Your contribution will directly improve patient care, protect vital medical supplies, and enhance the working environment for our dedicated healthcare staff.</p>
+                    
+					<div class="highlight-box">
+                        <p><strong><i class="fas fa-hand-holding-heart"></i> How You Can Help:</strong> Support Zimba Mission Hospital: Help us replace the OPD roof, expand and modernize the hospital, and install solar power for reliable healthcare services.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="newsletter-footer">
+                <div class="footer-logo">
+					<!--<img class="hospital-logo-img" src="pwc.png" alt="Zimba Mission Hospital Logo">-->
+                    <i class=""></i> Zimba Mission Hospital
+                </div>
+                <div class="footer-contact">
+                    <i class="fas fa-map-marker-alt"></i> Zimba District, Southern Province, Zambia<br>
+                    <i class="fas fa-phone-alt"></i> +260 96 123 4567 &nbsp;|&nbsp;
+                    <i class="fas fa-envelope"></i> info@zimbamission.org.zm<br>
+                    <i class="fab fa-facebook"></i> /ZimbaMission &nbsp;|&nbsp;
+                    <i class="fab fa-twitter"></i> @ZimbaMission
+                </div>
+                <div class="copyright">
+                    © 2026 Zimba Mission Hospital — "Healing with Faith & Compassion"<br>
+                    The Healing Hands Newsletter is published quarterly.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTROL BUTTONS -->
+    <div class="controls">
+        <button class="btn-pdf" id="downloadPdfBtn">
+            <i class="fas fa-file-pdf"></i> Download PDF Newsletter
+        </button>
+        <button class="btn-print" id="printBtn">
+            <i class="fas fa-print"></i> Print Version
+        </button>
+    </div>
+
+    <script>
+        const downloadBtn = document.getElementById('downloadPdfBtn');
+        const printBtn = document.getElementById('printBtn');
+        
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                const element = document.getElementById('newsletterContent');
+                const originalText = downloadBtn.innerHTML;
+                
+                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Generating PDF...';
+                downloadBtn.disabled = true;
+                
+                const opt = {
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: 'Zimba_Mission_Newsletter_March2026.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        letterRendering: true,
+                        backgroundColor: '#ffffff',
+                        useCORS: true,
+                        logging: false
+                    },
+                    jsPDF: { 
+                        unit: 'in', 
+                        format: 'a4', 
+                        orientation: 'portrait'
+                    }
+                };
+                
+                // Use a slight delay to ensure all images are loaded
+                setTimeout(() => {
+                    html2pdf().set(opt).from(element).save()
+                        .then(() => {
+                            downloadBtn.innerHTML = originalText;
+                            downloadBtn.disabled = false;
+                        })
+                        .catch((error) => {
+                            console.error('PDF Error:', error);
+                            downloadBtn.innerHTML = originalText;
+                            downloadBtn.disabled = false;
+                            alert('PDF generation encountered an issue. You can use Print > Save as PDF as an alternative.');
+                        });
+                }, 500);
+            });
+        }
+        
+        if (printBtn) {
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+        }
+        
+        window.addEventListener('load', function() {
+            console.log('Newsletter loaded and ready for PDF export');
+        });
+    </script>
+</body>
+</html>
